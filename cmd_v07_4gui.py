@@ -5,7 +5,8 @@ import os, shutil, copy, sys, logging, m_hash
 # TODO: Question. I can't get it to delete element. I tried deleting using list position AND remove method. Both fail in same way where it still leave many of the items inside the list. This happened with all methods of copying list apart from "Deepcopy" or "just copy paste actual data structure into a variable". WHHHHHHHHY??? It looks same when I print them!!!!!!!!!!! (new_content_list = list(self.contents_ori), or copy.copy(self.content_ori) doesn't actually work!!!
 # TODO: Better check for file method. currently only checking names but I can do size (os.path.getsize) or some sort of hash algorithm to make it more fool proof)
 
-# TODO: Main.
+
+# TODO: If it's same name but different size it knows it's different file now. However it will just copy and overwrite I suspect!!! For now it make it sys.exit() and terminate.
 
 
 #V02: It's like 70% WIP
@@ -223,10 +224,22 @@ class MyCopier(object):
                         file_b = destination[i][2][midpoint]
                         file_b_full = destination[i][0] + '\\' + file_b
 
-                        if self.check_file_names(file_a, file_b) and self.check_file_size(file_a_full, file_b_full)
+                        # print("self.check_file_names(file_a, file_b): " + str(self.check_file_names(file_a, file_b)))
+                        # print("self.check_file_size(file_a_full, file_b_full): " + str(self.check_file_size(file_a_full, file_b_full)))
+                        # print("")
+
+                        #If name and size are same it takes it out of new_content_list. new_content_list contains all the items to sync
+                        if self.check_file_names(file_a, file_b) and self.check_file_size(file_a_full, file_b_full):
                             found = True
+                            # print("removing: " + file_a)
                             logging.info("Bubble_sort + name + size checker passed: From list, Removing {}\\{}".format(source[i][0], file_a))
                             new_content_list[i][2].remove(file_a)
+                        elif  self.check_file_names(file_a, file_b) or self.check_file_size(file_a_full, file_b_full):
+                            print("Uh oh... two file with same name but different size")
+                            print("or same size but different name! Please check these files")
+                            print(file_a_full)
+                            print(file_b_full)
+                            sys.exit()
                         else:
                             if file_a < destination[i][2][midpoint]:
                                 last = midpoint-1
