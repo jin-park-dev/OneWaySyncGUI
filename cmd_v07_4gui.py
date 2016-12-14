@@ -215,11 +215,17 @@ class MyCopier(object):
                     first = 0
                     last = len(destination[i][2])-1
                     found = False
+
                     while first <= last and not found:
                         midpoint = (first+last)//2
-                        if destination[i][2][midpoint] == file_a:
+
+                        file_a_full = source[i][0] + '\\' + file_a
+                        file_b = destination[i][2][midpoint]
+                        file_b_full = destination[i][0] + '\\' + file_b
+
+                        if self.check_file_names(file_a, file_b) and self.check_file_size(file_a_full, file_b_full)
                             found = True
-                            logging.info("Bubble_sort: From list, Removing {}\\{}".format(source[i][0], file_a))
+                            logging.info("Bubble_sort + name + size checker passed: From list, Removing {}\\{}".format(source[i][0], file_a))
                             new_content_list[i][2].remove(file_a)
                         else:
                             if file_a < destination[i][2][midpoint]:
@@ -231,11 +237,19 @@ class MyCopier(object):
             logging.debug(
                 "IndexError. Source or destination is empty. Content_to_sync_list will be none so next part will throw error!")
 
-    def check_file_names(file_a, file_b):
-        pass
+    #if same, returns True
+    def check_file_names(self, file_a, file_b):
+        if file_a == file_b:
+            return True
+        else:
+            return False
 
-    def check_file_size(file_a, file_b):
-        pass
+    #if same, returns False
+    def check_file_size(self, file_a_full, file_b_full):
+        if os.path.getsize(file_a_full) == os.path.getsize(file_b_full):
+            return True
+        else:
+            return False
 
     def new_contents_bubble_hash(self, source, destination):
         new_content_list = copy.deepcopy(source)  # To make copy of the list
