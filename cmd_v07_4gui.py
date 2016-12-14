@@ -234,7 +234,7 @@ class MyCopier(object):
                             # print("removing: " + file_a)
                             logging.info("Bubble_sort + name + size checker passed: From list, Removing {}\\{}".format(source[i][0], file_a))
                             new_content_list[i][2].remove(file_a)
-                        elif  self.check_file_names(file_a, file_b) or self.check_file_size(file_a_full, file_b_full):
+                        elif self.check_file_names(file_a, file_b) or self.check_file_size(file_a_full, file_b_full):
                             print("Uh oh... two file with same name but different size")
                             print("or same size but different name! Please check these files")
                             print(file_a_full)
