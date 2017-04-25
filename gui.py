@@ -1,10 +1,17 @@
 from tkinter import *
-import cmd_v07_4gui
 import threading
 from tkinter import filedialog
 from functools import partial
 from tkinter import ttk
 import time
+
+import utils
+
+
+"""
+contains GUI related info
+"""
+
 
 # original_folder = r'X:\1 Music Vid\1 Dances\1 Lessons\1 Lessons Share'
 # copy_folder = r'D:\OneDrive\Pictures\4 Sharing with Others\Dances'
@@ -15,7 +22,7 @@ def run_sync():
     path_destination = entry_destination.get()
 
     def callback():
-        test_obj = cmd_v07_4gui.MyCopier(path_source, path_destination)
+        test_obj = utils.MyCopier(path_source, path_destination)
         test_obj.run()
     t_sync = threading.Thread(target=callback)
     t_sync.start()
@@ -78,10 +85,27 @@ progbar = ttk.Progressbar(root, mode='indeterminate', length = 600)
 progbar.grid(row=2, columnspan=3)
 
 
+#Enables, or disables showing of log_box.
+log_box = Text(root)
+is_there_log = False
+def enable_log():
+    if not is_there_log:
+        global is_there_log
+        is_there_log = True
+        log_box.grid(row=5, columnspan=3)
+    elif is_there_log:
+        global is_there_log
+        is_there_log = False
+        log_box.grid_remove()
+
+label_enable_copy = Label(root, text='Enable Copy')
+label_enable_copy.grid(row=3, column=1)
+var_enable_copy = IntVar()
+checkBtn_enable_copy = Checkbutton(root, variable=var_enable_copy)
+checkBtn_enable_copy.grid(row=4, column=1)
+
+
 Button(root, text="Sync", command=run_sync).grid(row=4, column=0)
-Button(root, text="Quit", command=root.quit).grid(row=4, column=2)
+Button(root, text="Log", command=enable_log).grid(row=4, column=2)
+Button(root, text="Quit", command=root.quit).grid(row=4, column=3)
 # Button(root, text="Dev_Test", command=clear_entry).grid(row=2, column=3)
-
-
-root.mainloop()
-
