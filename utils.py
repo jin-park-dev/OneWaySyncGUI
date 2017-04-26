@@ -55,7 +55,7 @@ class MyCopier(object):
 
         folder_diff = self.check_folder_structure(self.contents_Source, self.contents_destination)
         if folder_diff:
-            gui.log_box.insert(END, 'ERROR: Folder structures are different between source and destination. Manually fix.\n')
+            gui.log_box.insert(END, 'ERROR: Folder structures are different between source and destination. \n Two folder are not compatible or please make structures same.\n')
             sys.exit()
         else:
             gui.log_box.insert(END, 'Great! Folder structures are same. Preceding.\n')
@@ -74,7 +74,7 @@ class MyCopier(object):
             gui.log_box.insert(END, "Done! No file needs syncing! :) \n")
             sys.exit()
         else:
-            gui.log_box.insert(END, "disabled copy content for dev purposes. Please enable manually in code to copy. Maybe add tick button to enable or disable copy(?) \n")
+            # gui.log_box.insert(END, "disabled copy content for dev purposes. Please enable manually in code to copy. Maybe add tick button to enable or disable copy(?) \n")
             self.copy_contents(contents_to_sync_list, self.contents_destination)
 
         self.number_of_files(contents_to_sync_list)
@@ -295,10 +295,13 @@ class MyCopier(object):
                     gui.log_box.insert(END, "to\n")
                     gui.log_box.insert(END, destination[i][0] + '\\' + file_sync + "\n")
 
-                    #shutil.copy2((sync_list[i][0] + '\\' + file_sync), (destination[i][0] + '\\' + file_sync))
-                    print("DISABLED FOR DEV (Enable line above to activate copying: shutil.copy2((sync_list[i][0] + '\/' + file_sync), (destination[i][0] + '\/' + file_sync))")
-
-            print("1-Way sync done. All the files are copied.")
+                    gui.log_box.insert(END, 'Copy Status: ' + str(gui.var_enable_copy.get())+'\n')
+                    # if str(gui.var_enable_copy.get()) == "1":
+                    if gui.var_enable_copy.get():
+                        shutil.copy2((sync_list[i][0] + '\\' + file_sync), (destination[i][0] + '\\' + file_sync))
+                    elif not gui.var_enable_copy.get():
+                        gui.log_box.insert(END, "Syncing disabled. Please tick 'Enable Copy' to enable syncing."+ "\n")
+            gui.log_box.insert(END, "1-Way sync done. All the files are copied."+ "\n")
         except TypeError:
             logging.debug("Hmm Type Error. This shouldn't be showing up")
 
@@ -323,3 +326,5 @@ class MyCopier(object):
                 if folder_source not in destination[i][1]:
                     return True # Issue this is returned.
         return False #No issue this is returned
+
+logging.disable(logging.INFO)
